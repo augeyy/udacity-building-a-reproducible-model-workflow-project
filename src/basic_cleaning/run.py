@@ -39,6 +39,11 @@ def go(args):
     logger.info("Converting `last_review` to datetime...")
     df['last_review'] = pd.to_datetime(df['last_review'])
 
+    # Remove data points where longitude and latitude are outside of boundaries
+    idx = df['longitude'].between(-74.25, -73.50) \
+          & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
+
     # Save the artifact
     logger.info("Uploading artifact to W&B...")
     with tempfile.TemporaryDirectory() as tmp_dir:
